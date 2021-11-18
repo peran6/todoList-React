@@ -1,23 +1,76 @@
-import logo from './logo.svg';
+import React,{ useState,useEffect} from 'react';
 import './App.css';
+import Form from './components/Form';
+import ToDo from './components/ToDo';
+import ToDoList from './components/todoList';
+
 
 function App() {
+  //useState text, toDo
+  const [inputText, setInputText] = useState("");
+  const [toDos, setToDos] = useState([]);
+
+  //useState status, filtered
+  const [status,setStatus] = useState("all");
+  const [filteredTodos, setFilterdTodos] = useState([]);
+
+  //UseEffect retrieve from localhost
+  useEffect(() => {
+  getLocalToDos();
+  }, [] );
+
+  //UseEffect filters and save
+  useEffect(() => {
+    filterHandler();
+    saveLocalToDos();
+  }, [toDos,status] );
+
+  //Function for filtering
+  const filterHandler = () => {
+    switch(status){
+      case "completed": 
+        setFilterdTodos(toDos.filter((todo) => todo.completed === true));
+        break;
+      case "uncompleted": 
+        setFilterdTodos(toDos.filter((todo) => todo.completed === false));
+        break;
+      default:
+        setFilterdTodos(toDos);
+        break;
+    }
+  }
+
+  //Save to local
+  const saveLocalToDos = () => { 
+   localStorage.setItem('toDos',JSON.stringify(toDos));
+  };
+  //Retrive from local
+  const getLocalToDos = () => {
+    if(localStorage.getItem('toDos') === null){
+      localStorage.setItem('toDos',JSON.stringify([]));
+    }else{
+      let toDoLocal = JSON.parse(localStorage.getItem("toDos"));
+      setToDos(toDoLocal);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header>
+        <h1>To do list</h1>
       </header>
+      <Form 
+        setInputText={setInputText} 
+        inputText={inputText}
+        toDos={toDos} 
+        setToDos={setToDos}
+        setStatus={setStatus}
+      />
+      <ToDoList 
+        toDos={toDos}
+        setToDos={setToDos}
+        filteredTodos={filteredTodos}
+      />
     </div>
   );
 }
