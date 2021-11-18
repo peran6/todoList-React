@@ -1,7 +1,6 @@
 import React,{ useState,useEffect} from 'react';
 import './App.css';
 import Form from './components/Form';
-import ToDo from './components/ToDo';
 import ToDoList from './components/todoList';
 
 
@@ -9,7 +8,6 @@ function App() {
   //useState text, toDo
   const [inputText, setInputText] = useState("");
   const [toDos, setToDos] = useState([]);
-
   //useState status, filtered
   const [status,setStatus] = useState("all");
   const [filteredTodos, setFilterdTodos] = useState([]);
@@ -18,7 +16,6 @@ function App() {
   useEffect(() => {
   getLocalToDos();
   }, [] );
-
   //UseEffect filters and save
   useEffect(() => {
     filterHandler();
@@ -57,7 +54,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>To do list</h1>
+        <h1>--- Todo list ---</h1>
       </header>
       <Form 
         setInputText={setInputText} 
@@ -70,6 +67,8 @@ function App() {
         toDos={toDos}
         setToDos={setToDos}
         filteredTodos={filteredTodos}
+        inputText={inputText}
+        setInputText={setInputText}
       />
     </div>
   );
